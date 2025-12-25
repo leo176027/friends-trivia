@@ -42,13 +42,20 @@ exports.register = async (req, res) => {
 
     await user.save();
 
-    // Enviar email de verificación
-    const emailResult = await sendVerificationEmail(email, username, verificationToken);
-    
-    if (!emailResult.success) {
-      console.error('Error al enviar email, pero usuario creado:', emailResult.error);
-    }
+    // Enviar email de verificación de forma asíncrona (sin bloquear la respuesta)
+    sendVerificationEmail(email, username, verificationToken)
+      .then(emailResult => {
+        if (!emailResult.success) {
+          console.error('Error al enviar email, pero usuario creado:', emailResult.error);
+        } else {
+          console.log('Email de verificación enviado exitosamente a:', email);
+        }
+      })
+      .catch(err => {
+        console.error('Error al enviar email de verificación:', err);
+      });
 
+    // Responder inmediatamente sin esperar el email
     res.status(201).json({
       message: 'Usuario registrado exitosamente. Por favor verifica tu email para activar tu cuenta.',
       requiresEmailVerification: true,
@@ -171,8 +178,10 @@ exports.verifyEmail = async (req, res) => {
     
     console.log('✅ Email verificado y usuario guardado');
 
-    // Enviar email de bienvenida
-    await sendWelcomeEmail(user.email, user.username);
+    // Enviar email de bienvenida de forma asíncrona (sin bloquear la respuesta)
+    sendWelcomeEmail(user.email, user.username)
+      .then(() => console.log('Email de bienvenida enviado a:', user.email))
+      .catch(err => console.error('Error al enviar email de bienvenida:', err));
 
     // Crear JWT para login automático (12 horas)
     const authToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your_jwt_secret_key', {
