@@ -403,13 +403,12 @@ const Quiz = () => {
               <h3>{result?.message}</h3>
               <p>{t('points')}: <strong>{result?.pointsEarned > 0 ? '+' : ''}{result?.pointsEarned}</strong></p>
               <p>Respuesta correcta: <strong>{result?.correctAnswer}</strong></p>
+              {currentQuestionIndex < questions.length - 1 && (
+                <p style={{ marginTop: '10px', color: '#666', fontSize: '0.9rem' }}>
+                  ⏱️ Avanzando a la siguiente pregunta...
+                </p>
+              )}
             </div>
-            
-            {currentQuestionIndex < questions.length - 1 && (
-              <button onClick={handleNextQuestion} className="submit-btn next-btn">
-                ➡️ {t('nextQuestion')}
-              </button>
-            )}
           </>
         )}
 

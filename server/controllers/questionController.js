@@ -1,5 +1,6 @@
 const Question = require('../models/Question');
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 // Obtener conjunto de 4 preguntas (2 fáciles, 1 mediana, 1 difícil)
 exports.getDailyQuestion = async (req, res) => {
@@ -74,7 +75,13 @@ exports.getDailyQuestion = async (req, res) => {
 
     // Crear nueva sesión de quiz: obtener 2 fáciles, 1 mediana, 1 difícil
     // Excluir preguntas ya respondidas por el usuario
-    const answeredQuestionIds = user.answeredQuestions?.map(aq => aq.questionId) || [];
+    const answeredQuestionIds = user.answeredQuestions?.map(aq => {
+      // Convertir a ObjectId para comparación en MongoDB
+      const id = typeof aq.questionId === 'string' ? aq.questionId : aq.questionId.toString();
+      return new mongoose.Types.ObjectId(id);
+    }) || [];
+    
+    console.log('🔍 Usuario tiene', answeredQuestionIds.length, 'preguntas respondidas');
 
     const easyQuestions = await Question.aggregate([
       { $match: { 
