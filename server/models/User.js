@@ -78,4 +78,10 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+// Índices para optimizar performance
+userSchema.index({ email: 1 });
+userSchema.index({ username: 1 });
+userSchema.index({ points: -1 }); // Para ranking
+userSchema.index({ lastQuizCompleted: 1 }); // Para verificar cooldown
+
 module.exports = mongoose.model('User', userSchema);

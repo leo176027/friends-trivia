@@ -51,7 +51,8 @@ const questionSchema = new mongoose.Schema({
   }
 });
 
-// Ya no necesitamos índice único en dailyDate porque usamos selección aleatoria
-// questionSchema.index({ dailyDate: 1 }, { unique: true });
+// Índices para optimizar performance
+questionSchema.index({ difficulty: 1 }); // Para queries por dificultad
+questionSchema.index({ category: 1 }); // Para queries por categoría
 
 module.exports = mongoose.model('Question', questionSchema);

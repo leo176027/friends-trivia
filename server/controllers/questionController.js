@@ -7,7 +7,8 @@ exports.getDailyQuestion = async (req, res) => {
     const userId = req.userId;
     const language = req.query.lang || 'es'; // Obtener idioma de la query string
     console.log('🔍 Buscando usuario:', userId);
-    const user = await User.findById(userId);
+    // Optimización: traer solo campos necesarios
+    const user = await User.findById(userId).select('+lastQuizCompleted +currentQuizSession +answeredQuestions');
 
     if (!user) {
       console.log('❌ Usuario no encontrado:', userId);

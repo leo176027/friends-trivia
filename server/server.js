@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const connectDB = require('./config/database');
 
 // Importar rutas
@@ -9,6 +10,9 @@ const questionRoutes = require('./routes/questions');
 const scoreRoutes = require('./routes/scores');
 
 const app = express();
+
+// Comprimir respuestas HTTP para mejor performance
+app.use(compression());
 
 // Configuración de CORS para producción y desarrollo
 const allowedOrigins = [

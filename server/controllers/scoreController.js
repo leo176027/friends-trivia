@@ -12,8 +12,9 @@ exports.answerQuestion = async (req, res) => {
       return res.status(400).json({ message: 'Por favor proporciona questionId' });
     }
 
-    const user = await User.findById(userId);
-    const question = await Question.findById(questionId);
+    // Optimización: usar select para traer solo campos necesarios
+    const user = await User.findById(userId).select('+points +answeredQuestions +currentQuizSession +lastQuizCompleted');
+    const question = await Question.findById(questionId).lean();
 
     if (!user || !question) {
       return res.status(404).json({ message: 'Usuario o pregunta no encontrada' });
