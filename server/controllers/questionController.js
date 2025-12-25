@@ -49,27 +49,41 @@ exports.getDailyQuestion = async (req, res) => {
       const twoHours = 2 * 60 * 60 * 1000;
       
       if (sessionAge < twoHours) {
-        // Sesión activa, devolver las preguntas de la sesión actual
-        const sessionQuestions = await Question.find({
-          _id: { $in: user.currentQuizSession.questions.map(q => q.questionId) }
-        });
+        // Verificar si alguna pregunta de la sesión ya fue respondida globalmente
+        const answeredQuestionIds = user.answeredQuestions?.map(aq => aq.questionId.toString()) || [];
+        const hasInvalidQuestions = user.currentQuizSession.questions.some(
+          q => answeredQuestionIds.includes(q.questionId.toString())
+        );
+        
+        // Si hay preguntas inválidas, limpiar la sesión y crear una nueva
+        if (hasInvalidQuestions) {
+          console.log('⚠️ Sesión contiene preguntas ya respondidas, limpiando...');
+          user.currentQuizSession = undefined;
+          await user.save();
+          // Continuar al siguiente bloque para crear nueva sesión
+        } else {
+          // Sesión activa y válida, devolver las preguntas de la sesión actual
+          const sessionQuestions = await Question.find({
+            _id: { $in: user.currentQuizSession.questions.map(q => q.questionId) }
+          });
 
-        // Nota: Las opciones ya se mezclarán en el frontend
-        return res.json({
-          questions: sessionQuestions.map((q, index) => ({
-            id: q._id,
-            question: q.question[language] || q.question.es,
-            options: q.options.map(opt => ({ 
-              text: opt.text[language] || opt.text.es 
+          // Nota: Las opciones ya se mezclarán en el frontend
+          return res.json({
+            questions: sessionQuestions.map((q, index) => ({
+              id: q._id,
+              question: q.question[language] || q.question.es,
+              options: q.options.map(opt => ({ 
+                text: opt.text[language] || opt.text.es 
+              })),
+              difficulty: q.difficulty,
+              category: q.category,
+              answered: user.currentQuizSession.questions[index].answered,
+              timeLimit: 30 // segundos
             })),
-            difficulty: q.difficulty,
-            category: q.category,
-            answered: user.currentQuizSession.questions[index].answered,
-            timeLimit: 30 // segundos
-          })),
-          sessionActive: true,
-          questionsAnswered: user.currentQuizSession.questionsAnswered
-        });
+            sessionActive: true,
+            questionsAnswered: user.currentQuizSession.questionsAnswered
+          });
+        }
       }
     }
 

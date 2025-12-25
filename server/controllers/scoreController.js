@@ -25,6 +25,17 @@ exports.answerQuestion = async (req, res) => {
       return res.status(400).json({ message: 'No tienes una sesión de quiz activa' });
     }
 
+    // Verificar si el usuario ya respondió esta pregunta globalmente
+    const alreadyAnswered = user.answeredQuestions?.some(
+      aq => aq.questionId.toString() === questionId
+    );
+    
+    if (alreadyAnswered) {
+      return res.status(400).json({ 
+        message: 'Ya has respondido esta pregunta anteriormente. Por favor recarga la página para obtener nuevas preguntas.' 
+      });
+    }
+
     // Verificar que la pregunta pertenece a la sesión actual
     const questionIndex = user.currentQuizSession.questions.findIndex(
       q => q.questionId.toString() === questionId
@@ -34,7 +45,7 @@ exports.answerQuestion = async (req, res) => {
       return res.status(400).json({ message: 'Esta pregunta no pertenece a tu sesión actual' });
     }
 
-    // Verificar si la pregunta ya fue respondida
+    // Verificar si la pregunta ya fue respondida en esta sesión
     if (user.currentQuizSession.questions[questionIndex].answered) {
       return res.status(400).json({ message: 'Ya has respondido esta pregunta' });
     }
