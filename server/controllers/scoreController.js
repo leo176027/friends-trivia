@@ -5,7 +5,7 @@ const Score = require('../models/Score');
 // Responder pregunta (con manejo de timeout)
 exports.answerQuestion = async (req, res) => {
   try {
-    const { questionId, answer, timedOut } = req.body;
+    const { questionId, answer, timedOut, language = 'es' } = req.body;
     const userId = req.userId;
 
     if (!questionId) {
@@ -52,7 +52,8 @@ exports.answerQuestion = async (req, res) => {
 
     // Si hay timeout, marcar como incorrecta automáticamente
     const isTimedOut = timedOut === true;
-    const isCorrect = !isTimedOut && (question.correctAnswer === answer);
+    const correctAnswerText = question.correctAnswer[language] || question.correctAnswer.es;
+    const isCorrect = !isTimedOut && (correctAnswerText === answer);
     
     // Calcular puntos basados en dificultad
     let pointsEarned;
@@ -108,7 +109,7 @@ exports.answerQuestion = async (req, res) => {
       isCorrect,
       pointsEarned,
       newTotalPoints: user.points,
-      correctAnswer: question.correctAnswer,
+      correctAnswer: question.correctAnswer[language] || question.correctAnswer.es,
       questionsAnswered: user.currentQuizSession?.questionsAnswered || 4,
       sessionCompleted: !user.currentQuizSession
     });

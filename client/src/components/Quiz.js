@@ -128,7 +128,8 @@ const Quiz = () => {
     try {
       const response = await scoreService.answerQuestion({
         questionId: currentQuestion.id,
-        timedOut: true
+        timedOut: true,
+        language: language
       });
 
       setResult(response.data);
@@ -159,7 +160,8 @@ const Quiz = () => {
     try {
       const response = await scoreService.answerQuestion({
         questionId: currentQuestion.id,
-        answer: selectedAnswer
+        answer: selectedAnswer,
+        language: language
       });
 
       setResult(response.data);
