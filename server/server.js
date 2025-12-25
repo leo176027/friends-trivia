@@ -14,9 +14,8 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
+  'https://friends-trivia-tau.vercel.app',
   process.env.FRONTEND_URL,
-  // Agrega aquí tu URL de Vercel/Netlify después del deployment
-  // 'https://tu-app.vercel.app',
 ].filter(Boolean);
 
 app.use(cors({
