@@ -28,6 +28,7 @@ const Quiz = () => {
   const [totalScore, setTotalScore] = useState(0);
   const [quizStarted, setQuizStarted] = useState(false);
   const { user } = useAuth();
+  const { language } = useLanguage();
   const { t } = useLanguage();
   const timerRef = useRef(null);
 
