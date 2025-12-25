@@ -41,18 +41,20 @@ exports.register = async (req, res) => {
     });
 
     await user.save();
+    
+    console.log('👤 Usuario creado:', username, 'email:', email);
 
     // Enviar email de verificación de forma asíncrona (sin bloquear la respuesta)
     sendVerificationEmail(email, username, verificationToken)
       .then(emailResult => {
         if (!emailResult.success) {
-          console.error('Error al enviar email, pero usuario creado:', emailResult.error);
+          console.error('❌ Error al enviar email, pero usuario creado:', emailResult.error);
         } else {
-          console.log('Email de verificación enviado exitosamente a:', email);
+          console.log('✅ Email de verificación enviado exitosamente a:', email);
         }
       })
       .catch(err => {
-        console.error('Error al enviar email de verificación:', err);
+        console.error('❌ Excepción al enviar email de verificación:', err.message);
       });
 
     // Responder inmediatamente sin esperar el email

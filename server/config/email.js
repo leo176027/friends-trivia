@@ -2,6 +2,18 @@ const nodemailer = require('nodemailer');
 
 // Configuración del transporter de nodemailer
 const createTransporter = () => {
+  // Validar que las variables de entorno estén configuradas
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    console.error('⚠️ EMAIL_USER o EMAIL_PASSWORD no están configurados');
+    throw new Error('Configuración de email incompleta');
+  }
+  
+  console.log('📧 Creando transporter con:', {
+    service: process.env.EMAIL_SERVICE,
+    user: process.env.EMAIL_USER,
+    passwordConfigured: !!process.env.EMAIL_PASSWORD
+  });
+  
   // Usa variables de entorno para configuración
   if (process.env.EMAIL_SERVICE === 'gmail') {
     return nodemailer.createTransport({
@@ -28,9 +40,11 @@ const createTransporter = () => {
 // Función para enviar email de verificación
 const sendVerificationEmail = async (email, username, verificationToken) => {
   try {
+    console.log('📧 Intentando enviar email de verificación a:', email);
     const transporter = createTransporter();
     
     const verificationUrl = `${process.env.CLIENT_URL || 'http://localhost:3000'}/verify-email/${verificationToken}`;
+    console.log('🔗 URL de verificación:', verificationUrl);
     
     const mailOptions = {
       from: `"Friends Trivia" <${process.env.EMAIL_USER}>`,
@@ -55,10 +69,11 @@ const sendVerificationEmail = async (email, username, verificationToken) => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email de verificación enviado:', info.messageId);
+    console.log('✅ Email de verificación enviado:', info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Error al enviar email de verificación:', error);
+    console.error('❌ Error al enviar email de verificación:', error.message);
+    console.error('Stack:', error.stack);
     return { success: false, error: error.message };
   }
 };
