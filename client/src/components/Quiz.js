@@ -31,6 +31,8 @@ const Quiz = () => {
   const { language } = useLanguage();
   const { t } = useLanguage();
   const timerRef = useRef(null);
+  const autoAdvanceRef = useRef(null);
+  const autoAdvanceRef = useRef(null);
 
   useEffect(() => {
     return () => {
@@ -167,6 +169,11 @@ const Quiz = () => {
       
       if (response.data.sessionCompleted) {
         setSessionCompleted(true);
+      } else {
+        // Auto-avance después de 1.5 segundos
+        autoAdvanceRef.current = setTimeout(() => {
+          handleNextQuestion();
+        }, 1500);
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Error al enviar respuesta');
@@ -174,6 +181,12 @@ const Quiz = () => {
   };
 
   const handleNextQuestion = () => {
+    // Limpiar el timer de auto-avance si existe
+    if (autoAdvanceRef.current) {
+      clearTimeout(autoAdvanceRef.current);
+      autoAdvanceRef.current = null;
+    }
+    
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
