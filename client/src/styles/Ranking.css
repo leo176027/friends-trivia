@@ -1,0 +1,170 @@
+/* Ranking Styles - Friends Theme */
+.ranking-container {
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, var(--lilac-soft) 0%, var(--orange-soft) 50%, var(--lilac) 100%);
+  padding: 2rem;
+}
+
+.ranking-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ranking-card h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.ranking-table {
+  width: 100%;
+}
+
+.ranking-header {
+  display: grid;
+  grid-template-columns: 100px 1fr 150px;
+  gap: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--lilac-strong) 100%);
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 150px;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  align-items: center;
+  transition: background 0.3s ease;
+}
+
+.ranking-row:hover {
+  background: var(--orange-soft);
+}
+
+.ranking-row.first {
+  background: #fffef5;
+  border-left: 4px solid #ffd700;
+}
+
+.ranking-row.second {
+  background: #f5f9ff;
+  border-left: 4px solid #c0c0c0;
+}
+
+.ranking-row.third {
+  background: #fef8f5;
+  border-left: 4px solid #cd7f32;
+}
+
+.rank-col {
+  font-weight: 600;
+  color: var(--orange-strong);
+  font-size: 1.1rem;
+}
+
+.medal {
+  margin-right: 0.5rem;
+}
+
+.user-col {
+  color: #333;
+  font-weight: 500;
+}
+
+.points-col {
+  text-align: right;
+  color: var(--lilac-strong);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.no-data {
+  text-align: center;
+  color: #999;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.loading {
+  text-align: center;
+  color: white;
+  font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ranking-container {
+    padding: 1rem;
+  }
+
+  .ranking-card {
+    padding: 1.5rem;
+  }
+
+  .ranking-card h1 {
+    font-size: 1.8rem;
+  }
+
+  .ranking-header,
+  .ranking-row {
+    grid-template-columns: 60px 1fr 100px;
+    gap: 0.5rem;
+    padding: 0.8rem;
+  }
+
+  .rank-col {
+    font-size: 1rem;
+  }
+
+  .points-col {
+    font-size: 1rem;
+  }
+
+  .user-col {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ranking-card {
+    padding: 1rem;
+  }
+
+  .ranking-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .ranking-header,
+  .ranking-row {
+    grid-template-columns: 50px 1fr 80px;
+    gap: 0.3rem;
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .rank-col {
+    font-size: 0.9rem;
+  }
+
+  .points-col {
+    font-size: 0.9rem;
+  }
+
+  .user-col {
+    font-size: 0.85rem;
+  }
+
+  .medal {
+    font-size: 1.2rem;
+  }
+}

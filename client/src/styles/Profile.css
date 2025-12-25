@@ -1,0 +1,135 @@
+/* Profile Styles - Friends Theme */
+.profile-container {
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, var(--lilac-soft) 0%, var(--orange-soft) 50%, var(--lilac) 100%);
+  padding: 2rem;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.profile-card h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.profile-card h2 {
+  color: var(--lilac-strong);
+  font-size: 1.3rem;
+  margin: 1.5rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.info-section,
+.stats-section {
+  padding: 1.5rem;
+  background: var(--lilac-soft);
+  border-radius: 5px;
+}
+
+.info-section p {
+  margin: 0.8rem 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.info-section strong {
+  color: var(--lilac-strong);
+  min-width: 120px;
+  display: inline-block;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-item span {
+  color: #666;
+  font-size: 1rem;
+}
+
+.stat-value {
+  color: var(--lilac-strong);
+  font-size: 1.3rem;
+}
+
+.loading {
+  text-align: center;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.error-message {
+  background: #fee;
+  color: #c33;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #c33;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem;
+  }
+
+  .profile-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .profile-card h1 {
+    font-size: 1.8rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .profile-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .profile-card h2 {
+    font-size: 1.1rem;
+  }
+
+  .stat-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .stat-value {
+    align-self: flex-end;
+  }
+}

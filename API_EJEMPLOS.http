@@ -1,0 +1,361 @@
+/*
+  EJEMPLOS DE PRUEBA DE API - Friends Trivia
+  
+  Usa Postman, Thunder Client, o curl para probar estos endpoints
+  Asegúrate de que el servidor está corriendo en http://localhost:5000
+*/
+
+// ============================================
+// 1. AUTENTICACIÓN
+// ============================================
+
+// REGISTRO
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "ross_paleontologist",
+  "email": "ross@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+
+// Respuesta exitosa (con verificación de email):
+{
+  "message": "Usuario registrado exitosamente. Por favor verifica tu email para activar tu cuenta.",
+  "requiresEmailVerification": true,
+  "email": "ross@example.com"
+}
+
+// ============================================
+
+// VERIFICAR EMAIL (reemplaza TOKEN con el token del email)
+GET http://localhost:5000/api/auth/verify-email/abc123def456ghi789jkl012mno345pq
+
+// Respuesta exitosa:
+{
+  "message": "Email verificado exitosamente",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "507f1f77bcf86cd799439011",
+    "username": "ross_paleontologist",
+    "email": "ross@example.com",
+    "points": 0,
+    "role": "user"
+  }
+}
+
+// ============================================
+
+// REENVIAR EMAIL DE VERIFICACIÓN
+POST http://localhost:5000/api/auth/resend-verification
+Content-Type: application/json
+
+{
+  "email": "ross@example.com"
+}
+
+// Respuesta exitosa:
+{
+  "message": "Email de verificación reenviado exitosamente",
+  "email": "ross@example.com"
+}
+
+// ============================================
+
+// LOGIN
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "ross@example.com",
+  "password": "password123"
+}
+
+// Respuesta exitosa (si el email está verificado):
+{
+  "message": "Login exitoso",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "507f1f77bcf86cd799439011",
+    "username": "ross_paleontologist",
+    "email": "ross@example.com",
+    "points": 0
+  }
+}
+
+// ============================================
+
+// OBTENER PERFIL (REQUIERE TOKEN)
+GET http://localhost:5000/api/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+// Respuesta:
+{
+  "user": {
+    "id": "507f1f77bcf86cd799439011",
+    "username": "ross_paleontologist",
+    "email": "ross@example.com",
+    "points": 25,
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+
+// ============================================
+// 2. PREGUNTAS
+// ============================================
+
+// OBTENER PREGUNTA DEL DÍA
+GET http://localhost:5000/api/questions/daily
+
+// Respuesta:
+{
+  "question": {
+    "id": "507f1f77bcf86cd799439012",
+    "question": "¿Cuál es el nombre del bar donde se reúnen los personajes?",
+    "options": [
+      {
+        "text": "Central Perk",
+        "isCorrect": true
+      },
+      {
+        "text": "The Ritz",
+        "isCorrect": false
+      },
+      {
+        "text": "The Coffee Bean",
+        "isCorrect": false
+      },
+      {
+        "text": "Brew Haven",
+        "isCorrect": false
+      }
+    ],
+    "difficulty": "easy",
+    "category": "Friends"
+  }
+}
+
+// ============================================
+
+// CREAR PREGUNTA
+POST http://localhost:5000/api/questions
+Content-Type: application/json
+
+{
+  "question": "¿Cuál es el nombre del hijo adoptado de Monica?",
+  "options": [
+    {
+      "text": "Jack",
+      "isCorrect": true
+    },
+    {
+      "text": "Ben",
+      "isCorrect": false
+    },
+    {
+      "text": "Emma",
+      "isCorrect": false
+    },
+    {
+      "text": "Erica",
+      "isCorrect": false
+    }
+  ],
+  "correctAnswer": "Jack",
+  "difficulty": "hard",
+  "points": 20
+}
+
+// ============================================
+
+// OBTENER TODAS LAS PREGUNTAS
+GET http://localhost:5000/api/questions
+
+// Respuesta:
+{
+  "questions": [
+    {
+      "_id": "507f1f77bcf86cd799439012",
+      "question": "¿Cuál es el nombre del bar donde se reúnen los personajes?",
+      "options": [...],
+      "difficulty": "easy",
+      "points": 10,
+      "dailyDate": "2024-01-15T00:00:00Z"
+    }
+  ]
+}
+
+// ============================================
+// 3. PUNTUACIÓN
+// ============================================
+
+// RESPONDER PREGUNTA (REQUIERE TOKEN)
+POST http://localhost:5000/api/scores/answer
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "questionId": "507f1f77bcf86cd799439012",
+  "answer": "Central Perk"
+}
+
+// Respuesta exitosa (respuesta correcta):
+{
+  "message": "¡Respuesta correcta!",
+  "isCorrect": true,
+  "pointsEarned": 10,
+  "newTotalPoints": 25,
+  "correctAnswer": "Central Perk"
+}
+
+// Respuesta incorrecta:
+{
+  "message": "Respuesta incorrecta",
+  "isCorrect": false,
+  "pointsEarned": -5,
+  "newTotalPoints": 20,
+  "correctAnswer": "Central Perk"
+}
+
+// ============================================
+
+// OBTENER RANKING GLOBAL
+GET http://localhost:5000/api/scores/ranking
+
+// Respuesta:
+{
+  "ranking": [
+    {
+      "position": 1,
+      "username": "phoebe_artist",
+      "points": 150,
+      "email": "phoebe@example.com"
+    },
+    {
+      "position": 2,
+      "username": "ross_paleontologist",
+      "points": 125,
+      "email": "ross@example.com"
+    },
+    {
+      "position": 3,
+      "username": "chandler_bing",
+      "points": 100,
+      "email": "chandler@example.com"
+    }
+  ]
+}
+
+// ============================================
+
+// OBTENER POSICIÓN DEL USUARIO EN RANKING (REQUIERE TOKEN)
+GET http://localhost:5000/api/scores/user-rank
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+// Respuesta:
+{
+  "rank": 2,
+  "points": 125,
+  "username": "ross_paleontologist"
+}
+
+// ============================================
+
+// OBTENER ESTADÍSTICAS DEL USUARIO (REQUIERE TOKEN)
+GET http://localhost:5000/api/scores/stats
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+// Respuesta:
+{
+  "stats": {
+    "totalPoints": 125,
+    "totalAnswered": 15,
+    "correctAnswers": 13,
+    "accuracy": 86.67,
+    "username": "ross_paleontologist"
+  }
+}
+
+// ============================================
+// CÓDIGOS DE ERROR COMUNES
+// ============================================
+
+// 400 - Bad Request
+{
+  "message": "Por favor completa todos los campos"
+}
+
+// 400 - Usuario ya existe
+{
+  "message": "El usuario o email ya existe"
+}
+
+// 400 - Credenciales inválidas
+{
+  "message": "Credenciales inválidas"
+}
+
+// 400 - Ya respondiste hoy
+{
+  "message": "Ya has respondido la pregunta de hoy"
+}
+
+// 401 - No autorizado
+{
+  "message": "No hay token, autorización denegada"
+}
+
+// 404 - No encontrado
+{
+  "message": "Usuario o pregunta no encontrada"
+}
+
+// 500 - Error del servidor
+{
+  "message": "Error en el servidor",
+  "error": "Detalles del error..."
+}
+
+// ============================================
+// PRUEBAS CON CURL
+// ============================================
+
+/*
+// Registro
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "ross_paleontologist",
+    "email": "ross@example.com",
+    "password": "password123",
+    "confirmPassword": "password123"
+  }'
+
+// Login
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "ross@example.com",
+    "password": "password123"
+  }'
+
+// Obtener pregunta del día
+curl http://localhost:5000/api/questions/daily
+
+// Responder pregunta (reemplaza TOKEN y questionId)
+curl -X POST http://localhost:5000/api/scores/answer \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "questionId": "507f1f77bcf86cd799439012",
+    "answer": "Central Perk"
+  }'
+
+// Obtener ranking
+curl http://localhost:5000/api/scores/ranking
+
+// Obtener perfil
+curl http://localhost:5000/api/auth/profile \
+  -H "Authorization: Bearer TOKEN"
+*/

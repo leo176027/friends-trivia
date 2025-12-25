@@ -1,0 +1,316 @@
+```
+ARQUITECTURA - FRIENDS TRIVIA
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│                      FRONTEND (React)                        │
+│                   http://localhost:3000                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Navegación / Navbar                      │   │
+│  │  [Home] [Quiz] [Ranking] [Perfil] [Login/Logout]    │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Context API (AuthContext)                │   │
+│  │  • Usuario logueado                                   │   │
+│  │  • Token JWT                                          │   │
+│  │  • Funciones login/register/logout                    │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Páginas / Componentes                    │   │
+│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐        │   │
+│  │  │   Home     │ │   Login    │ │  Register  │        │   │
+│  │  └────────────┘ └────────────┘ └────────────┘        │   │
+│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐        │   │
+│  │  │   Quiz     │ │  Ranking   │ │  Profile   │        │   │
+│  │  └────────────┘ └────────────┘ └────────────┘        │   │
+│  │  ┌────────────────────────────────────────┐           │   │
+│  │  │        AdminPanel (crear preguntas)    │           │   │
+│  │  └────────────────────────────────────────┘           │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Servicios API (Axios)                    │   │
+│  │  • authService                                        │   │
+│  │  • questionService                                    │   │
+│  │  • scoreService                                       │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                              │                                │
+│                              │ HTTP/REST                      │
+│                              ▼                                │
+└─────────────────────────────────────────────────────────────┘
+
+                            INTERNET / API
+                                  │
+                                  │
+                                  ▼
+
+┌─────────────────────────────────────────────────────────────┐
+│                      BACKEND (Express)                       │
+│                   http://localhost:5000                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                  Rutas / Endpoints                    │   │
+│  │  ┌──────────────────────────────────────────────┐   │   │
+│  │  │ /api/auth                                    │   │   │
+│  │  │  • POST   /register                          │   │   │
+│  │  │  • POST   /login                             │   │   │
+│  │  │  • GET    /profile                           │   │   │
+│  │  └──────────────────────────────────────────────┘   │   │
+│  │  ┌──────────────────────────────────────────────┐   │   │
+│  │  │ /api/questions                               │   │   │
+│  │  │  • GET    /daily                             │   │   │
+│  │  │  • POST   /                                  │   │   │
+│  │  │  • GET    /                                  │   │   │
+│  │  └──────────────────────────────────────────────┘   │   │
+│  │  ┌──────────────────────────────────────────────┐   │   │
+│  │  │ /api/scores                                  │   │   │
+│  │  │  • POST   /answer                            │   │   │
+│  │  │  • GET    /ranking                           │   │   │
+│  │  │  • GET    /user-rank                         │   │   │
+│  │  │  • GET    /stats                             │   │   │
+│  │  └──────────────────────────────────────────────┘   │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │          Middleware                                   │   │
+│  │  • CORS                                              │   │
+│  │  • express.json()                                    │   │
+│  │  • auth (JWT verification)                           │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │          Controllers                                  │   │
+│  │  • authController.js                                 │   │
+│  │  • questionController.js                             │   │
+│  │  • scoreController.js                                │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │          Modelos MongoDB                             │   │
+│  │  ┌────────────┐ ┌──────────────┐ ┌──────────┐        │   │
+│  │  │    User    │ │   Question   │ │  Score   │        │   │
+│  │  │            │ │              │ │          │        │   │
+│  │  │ • username │ │ • question   │ │ • userId │        │   │
+│  │  │ • email    │ │ • options    │ │ • qId    │        │   │
+│  │  │ • password │ │ • correct    │ │ • isOk   │        │   │
+│  │  │ • points   │ │ • points     │ │ • points │        │   │
+│  │  └────────────┘ └──────────────┘ └──────────┘        │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                              │                                │
+│                              │ Mongoose ODM                   │
+│                              ▼                                │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │         Conexión a Base de Datos                     │   │
+│  │         (config/database.js)                         │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
+
+                              │
+                              │ MongoDB Driver
+                              ▼
+
+┌─────────────────────────────────────────────────────────────┐
+│                      BASE DE DATOS                           │
+│            MongoDB (Local o MongoDB Atlas)                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  Colecciones:                                                │
+│  • users                                                     │
+│  • questions                                                 │
+│  • scores                                                    │
+│                                                               │
+│  Índices:                                                    │
+│  • users.email (unique)                                      │
+│  • users.username (unique)                                   │
+│  • questions.dailyDate (unique)                              │
+│  • scores.userId, scores.questionId                          │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
+
+
+FLUJO DE DATOS
+═════════════════════════════════════════════════════════════
+
+1. REGISTRO
+   ┌─────────────┐
+   │   Usuario   │
+   │   Ingresa   │
+   │   Datos     │
+   └──────┬──────┘
+          │
+          ▼
+   ┌─────────────────────────┐
+   │  Validar Formulario     │
+   │  React                  │
+   └──────┬──────────────────┘
+          │ POST /api/auth/register
+          ▼
+   ┌─────────────────────────┐
+   │  Validar en Servidor    │
+   │  Hashear contraseña     │
+   │  bcryptjs               │
+   └──────┬──────────────────┘
+          │
+          ▼
+   ┌─────────────────────────┐
+   │  Guardar en MongoDB     │
+   └──────┬──────────────────┘
+          │
+          ▼
+   ┌─────────────────────────┐
+   │  Crear JWT Token        │
+   │  Enviar a cliente       │
+   └──────┬──────────────────┘
+          │
+          ▼
+   ┌─────────────────────────┐
+   │  Guardar Token en       │
+   │  localStorage           │
+   └──────┬──────────────────┘
+          │
+          ▼
+   ┌─────────────────────────┐
+   │  Redirigir a /quiz      │
+   └─────────────────────────┘
+
+2. RESPONDER PREGUNTA
+   ┌──────────────────┐
+   │  Usuario lee la  │
+   │  pregunta del    │
+   │  día             │
+   └────────┬─────────┘
+            │
+            ▼
+   ┌──────────────────────────┐
+   │  Selecciona opción       │
+   │  Envía respuesta         │
+   │  POST /api/scores/answer │
+   └────────┬─────────────────┘
+            │ + JWT Token
+            ▼
+   ┌──────────────────────────┐
+   │  Validar token           │
+   │  Verificar si ya respondió│
+   │  Comparar respuesta       │
+   └────────┬─────────────────┘
+            │
+            ▼
+   ┌──────────────────────────┐
+   │  Si correcta: +10 pts    │
+   │  Si incorrecta: -5 pts   │
+   │  Actualizar usuario      │
+   │  Guardar en scores       │
+   └────────┬─────────────────┘
+            │
+            ▼
+   ┌──────────────────────────┐
+   │  Enviar resultado al     │
+   │  cliente                 │
+   │  Mostrar feedback        │
+   └──────────────────────────┘
+
+3. VER RANKING
+   ┌──────────────────────┐
+   │  Usuario abre        │
+   │  página de ranking   │
+   └────────┬─────────────┘
+            │ GET /api/scores/ranking
+            ▼
+   ┌──────────────────────────┐
+   │  Consultar MongoDB       │
+   │  Ordenar por points      │
+   │  Limit 100 resultados    │
+   └────────┬─────────────────┘
+            │
+            ▼
+   ┌──────────────────────────┐
+   │  Enviar lista ordenada   │
+   │  al cliente              │
+   └────────┬─────────────────┘
+            │
+            ▼
+   ┌──────────────────────────┐
+   │  Renderizar tabla con    │
+   │  posiciones y medallas   │
+   └──────────────────────────┘
+
+
+AUTENTICACIÓN CON JWT
+═════════════════════════════════════════════════════════════
+
+1. Usuario hace login
+2. Servidor verifica credenciales
+3. Servidor crea JWT token con userId
+4. Cliente guarda token en localStorage
+5. Cliente incluye token en header: "Authorization: Bearer <token>"
+6. Servidor verifica token en middleware auth
+7. Si válido, continúa; si no, rechaza con 401
+
+Token estructura:
+  ┌──────────┬──────────┬────────────┐
+  │  Header  │  Payload │  Signature │
+  └──────────┴──────────┴────────────┘
+  
+  Payload contiene:
+  • userId
+  • iat (creado)
+  • exp (expira en 30 días)
+
+
+SEGURIDAD
+═════════════════════════════════════════════════════════════
+
+✓ Contraseñas hasheadas con bcryptjs
+✓ JWT para autenticación sin sesiones
+✓ CORS habilitado solo para localhost
+✓ Middleware de autenticación en rutas protegidas
+✓ Validación de entrada en servidor
+✓ Variables sensibles en .env
+✓ Errores genéricos al usuario final
+✓ Índices unique en BD para datos únicos
+
+
+RENDIMIENTO
+═════════════════════════════════════════════════════════════
+
+✓ Lazy loading de componentes React
+✓ Queries optimizadas en MongoDB
+✓ Índices en campos frecuentemente consultados
+✓ Caching de JWT en localStorage
+✓ Compresión GZIP en respuestas
+✓ CDN recomendado para assets
+✓ Código CSS optimizado sin frameworks pesados
+
+
+ESCALABILIDAD FUTURA
+═════════════════════════════════════════════════════════════
+
+→ Agregar Redis para caché
+→ WebSockets para ranking en tiempo real
+→ Pagination en tablas grandes
+→ Búsqueda full-text para preguntas
+→ Upload de imágenes para preguntas
+→ Sistema de roles (admin, moderador, usuario)
+→ Rate limiting por IP
+→ Logging y monitoreo
+→ Tests automatizados
+→ CI/CD pipeline
+
+
+DESPLIEGUE
+═════════════════════════════════════════════════════════════
+
+Front-end:          Backend:            Base de datos:
+Vercel -----┐      Heroku -----┐       MongoDB Atlas
+Netlify     │      AWS Lambda  │       AWS DocumentDB
+GitHub      │      Google Cloud│       Azure Cosmos DB
+Pages       └──────────────────┘
+```
+
+**Diagrama generado: 15-01-2024**

@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --orange: #f6a65c;
+  --orange-strong: #e58c3a;
+  --orange-soft: #ffe7d4;
+  --lilac: #c9b4ff;
+  --lilac-strong: #a992e2;
+  --lilac-soft: #f2ecff;
+  --ink: #2f243a;
+  --muted: #6b6373;
+}
+
+body {
+  background: var(--lilac-soft);
+}
+
+/* Estilos globales */
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--lilac) 0%, var(--orange) 100%);
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--lilac) 0%, var(--orange) 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Mejoras para móvil */
+@media (max-width: 768px) {
+  html, body {
+    font-size: 16px; /* Previene zoom en iOS */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Scrollbar más delgada en móvil */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  /* Evitar scroll horizontal */
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Touch targets para móvil - mínimo 44x44px */
+@media (max-width: 768px) {
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mejora de tap en botones */
+  button,
+  a {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Prevenir zoom en inputs en iOS */
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
