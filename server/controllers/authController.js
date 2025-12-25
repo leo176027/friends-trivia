@@ -27,40 +27,29 @@ exports.register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Generar token de verificación
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
+    // ⚠️ VERIFICACIÓN DE EMAIL DESHABILITADA TEMPORALMENTE
+    // const verificationToken = crypto.randomBytes(32).toString('hex');
+    // const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-    // Crear nuevo usuario
+    // Crear nuevo usuario con email ya verificado
     user = new User({
       username,
       email,
       password: hashedPassword,
-      emailVerificationToken: verificationToken,
-      emailVerificationExpires: verificationExpires
+      isEmailVerified: true // Email verificado automáticamente
     });
 
     await user.save();
     
-    console.log('👤 Usuario creado:', username, 'email:', email);
+    console.log('👤 Usuario creado (email auto-verificado):', username, 'email:', email);
 
-    // Enviar email de verificación de forma asíncrona (sin bloquear la respuesta)
-    sendVerificationEmail(email, username, verificationToken)
-      .then(emailResult => {
-        if (!emailResult.success) {
-          console.error('❌ Error al enviar email, pero usuario creado:', emailResult.error);
-        } else {
-          console.log('✅ Email de verificación enviado exitosamente a:', email);
-        }
-      })
-      .catch(err => {
-        console.error('❌ Excepción al enviar email de verificación:', err.message);
-      });
+    // ⚠️ Email de verificación deshabilitado temporalmente
+    // sendVerificationEmail(email, username, verificationToken)
 
-    // Responder inmediatamente sin esperar el email
+    // Responder con mensaje de éxito directo
     res.status(201).json({
-      message: 'Usuario registrado exitosamente. Por favor verifica tu email para activar tu cuenta.',
-      requiresEmailVerification: true,
+      message: 'Usuario registrado exitosamente. Ya puedes iniciar sesión.',
+      requiresEmailVerification: false,
       email: user.email
     });
   } catch (error) {
@@ -83,14 +72,14 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Credenciales inválidas' });
     }
 
-    // Verificar si el email está verificado
-    if (!user.isEmailVerified) {
-      return res.status(403).json({ 
-        message: 'Por favor verifica tu email antes de iniciar sesión',
-        requiresEmailVerification: true,
-        email: user.email
-      });
-    }
+    // ⚠️ Verificación de email deshabilitada temporalmente
+    // if (!user.isEmailVerified) {
+    //   return res.status(403).json({ 
+    //     message: 'Por favor verifica tu email antes de iniciar sesión',
+    //     requiresEmailVerification: true,
+    //     email: user.email
+    //   });
+    // }
 
     // Verificar contraseña
     const isMatch = await bcrypt.compare(password, user.password);
